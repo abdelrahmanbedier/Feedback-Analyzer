@@ -20,7 +20,7 @@ def create_feedback(db: Session, feedback: schemas.FeedbackCreate):
     )
 
     db.add(db_feedback)
-    db.commit()
+    db.commit() 
     db.refresh(db_feedback)
 
     return db_feedback
@@ -29,7 +29,7 @@ def create_feedback(db: Session, feedback: schemas.FeedbackCreate):
 def get_all_feedback(db: Session, product: str | None = None, sentiment: str | None = None, original_language: str | None = None, show_all: bool = False, skip: int = 0, limit: int = 10):
     known_codes = ['en', 'fr', 'es', 'de', 'ja', 'zh', 'ru', 'ar', 'pt', 'it']
 
-    query = db.query(models.Feedback)
+    query = db.query(models.Feedback) 
 
     if not show_all:
         query = query.filter(models.Feedback.status == 'published')
