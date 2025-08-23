@@ -20,7 +20,7 @@ jobs:
       - name: Run tests and generate coverage report
         run: |
           echo "GEMINI_API_KEY=fake_key_for_testing" > .env
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml exec backend pytest --cov=. --cov-report=xml
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml exec -w /app backend pytest --cov=. --cov-report=xml
 
       - name: Stop services
         if: always()
