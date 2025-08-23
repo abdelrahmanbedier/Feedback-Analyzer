@@ -143,4 +143,3 @@ The integration is handled by the `backend/ai_service.py` module. A detailed pro
 -   Database schema changes during development require manually removing the Docker volume (`docker volume rm feedback-analyzer_postgres_data`) and restarting the application, which deletes all existing data. In a production setting, a migration tool like Alembic would be used.
 
 
-![Coverage Badge](coverage.svg)
