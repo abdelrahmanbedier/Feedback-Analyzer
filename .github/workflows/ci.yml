@@ -1,0 +1,23 @@
+name: Run Backend Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build the Docker images
+      run: docker compose build
+
+    - name: Run the tests
+      run: |
+        echo "GEMINI_API_KEY=fake_key_for_testing" > .env
+        docker compose run --rm backend pytest
