@@ -39,13 +39,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
-          path: backend # <--- Add this line
-      
+          path: backend
+
       - name: Generate Coverage Badge
-        # This action will now find the file at `backend/coverage.xml`
+        # This action automatically finds coverage.xml
         uses: tj-actions/coverage-badge-py@v2
         with:
           output: coverage.svg
+          working-directory: backend # <--- Add this line to specify where to look
 
       - name: Commit the badge
         uses: EndBug/add-and-commit@v9
