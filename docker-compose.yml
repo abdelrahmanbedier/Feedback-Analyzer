@@ -1,0 +1,45 @@
+
+
+services:
+  # Backend Service (FastAPI)
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db # <-- ADD THIS
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/feedback_db
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+
+  # Frontend Service (React)
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # <-- This is the important change
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+
+  # Database Service (PostgreSQL)
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432" # <-- ADD THIS LINE
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=feedback_db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+
+# Define the named volume for data persistence
+volumes:
+  postgres_data:

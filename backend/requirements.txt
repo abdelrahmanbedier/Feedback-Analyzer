@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+psycopg2-binary
+SQLAlchemy
+google-generativeai
+pycountry
+pytest
+httpx
+aiosqlite
+pytest-asyncio
+pytest-cov
+pytest-mock
