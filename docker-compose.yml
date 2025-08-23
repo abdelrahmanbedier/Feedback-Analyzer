@@ -3,7 +3,7 @@
 services:
   # Backend Service (FastAPI)
   backend:
-    build: ./backend:/app
+    build: ./backend
     ports:
       - "8000:8000"
     volumes:

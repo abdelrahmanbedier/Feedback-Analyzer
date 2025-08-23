@@ -11,19 +11,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build the Docker images
-        run: docker compose build
+      - name: Build and run the Docker images
+        run: docker compose up -d
+
+      - name: Wait for services to be ready
+        run: sleep 10
 
       - name: Run tests and generate coverage report
         run: |
           echo "GEMINI_API_KEY=fake_key_for_testing" > .env
-          docker compose run --rm backend pytest --cov=. --cov-report=xml
+          docker compose exec backend pytest --cov=. --cov-report=xml
+
+      - name: Stop services
+        if: always()
+        run: docker compose down
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: backend/coverage.xml # Be specific about the file
+          path: backend/coverage.xml
 
   update-badge:
     runs-on: ubuntu-latest
@@ -42,11 +49,10 @@ jobs:
           path: backend
 
       - name: Generate Coverage Badge
-        # This action automatically finds coverage.xml
         uses: tj-actions/coverage-badge-py@v2
         with:
           output: coverage.svg
-          working-directory: backend # <--- Add this line to specify where to look
+          working-directory: backend
 
       - name: Commit the badge
         uses: EndBug/add-and-commit@v9
