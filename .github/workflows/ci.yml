@@ -43,11 +43,7 @@ jobs:
       - name: Generate Coverage Badge
         uses: tj-actions/coverage-badge-py@v2
         with:
-          # Corrected parameter names
-          coverage_file_path: backend/coverage.xml
-          output_badge_path: coverage.svg
-          # Corrected thresholds format
-          thresholds: '85 60'
+          output: coverage.svg
 
       - name: Commit the badge
         uses: EndBug/add-and-commit@v9
