@@ -46,6 +46,8 @@ function App() {
   const [messageType, setMessageType] = useState('success');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
 
   const fetchStats = useCallback(() => {
     axios.get('http://localhost:8000/api/stats')
@@ -83,14 +85,21 @@ function App() {
   }, [fetchFeedback]);
 
   const handleAdminLogin = () => {
-    const password = prompt('Enter admin password:');
-    if (password === 'admin123') {
-      setIsAdminMode(true);
-      localStorage.setItem('isAdmin', 'true');
-    } else if (password) {
-      alert('Incorrect password.');
-    }
+  setShowLoginModal(true);
   };
+
+  const handlePasswordSubmit = (event) => {
+  event.preventDefault(); // Prevent form from reloading the page
+  if (passwordInput === 'admin123') {
+    setIsAdminMode(true);
+    localStorage.setItem('isAdmin', 'true');
+    setShowLoginModal(false); // Close the modal on success
+    setPasswordInput(''); // Clear the password input
+  } else {
+    alert('Incorrect password.');
+    setPasswordInput(''); // Clear the password input
+  }
+};
 
   const handleAdminLogout = () => {
     setIsAdminMode(false);
@@ -319,8 +328,31 @@ function App() {
             )}
           </div>
         </div>
+        
       </main>
+       {/* --- NEW: Login Modal --- */}
+        {showLoginModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Admin Login</h2>
+              <form onSubmit={handlePasswordSubmit}>
+                <input
+                  type="password"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  placeholder="Enter password..."
+                  autoFocus
+                />
+                <div className="modal-buttons">
+                  <button type="submit">Login</button>
+                  <button type="button" onClick={() => setShowLoginModal(false)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )} 
     </div>
+    
   ); 
 }
 
