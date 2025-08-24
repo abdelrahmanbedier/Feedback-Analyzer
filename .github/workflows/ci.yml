@@ -19,16 +19,11 @@ jobs:
           echo "GEMINI_API_KEY=fake_key_for_testing" > .env
           docker compose run --rm backend pytest --cov=. --cov-report=xml
 
-      # NEW STEP: Move the coverage file to the root directory
-      - name: Move coverage file
-        run: mv backend/coverage.xml .
-
-      # UPDATED STEP: Upload the file from the root
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage.xml
+          path: backend/coverage.xml
 
   update-badge:
     runs-on: ubuntu-latest
@@ -44,6 +39,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-report
+          # Download to the root of the workspace
+          path: .
+
+      # --- NEW DEBUGGING STEP ---
+      - name: See where the file was downloaded
+        run: ls -R
 
       - name: Generate Coverage Badge
         uses: tj-actions/coverage-badge-py@v2
