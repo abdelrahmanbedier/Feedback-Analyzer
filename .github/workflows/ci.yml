@@ -7,6 +7,7 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    # Grant permissions for the job to commit back to the repo
     permissions:
       contents: write
 
@@ -22,14 +23,17 @@ jobs:
           echo "GEMINI_API_KEY=fake_key_for_testing" > .env
           docker compose run --rm backend pytest --cov=. --cov-report=xml
 
-      - name: Create Coverage Badge
-        uses: sverre-stad/coverage-badge-action@v1
+      - name: Generate Coverage Badge
+        uses: tj-actions/coverage-badge-py@v2
         with:
-          path: backend/coverage.xml
           output: coverage.svg
-          
+          # This is the key fix: tell the action to run inside the backend folder
+          # where the coverage.xml file is located.
+          working-directory: backend
+
       - name: Commit the badge
         uses: EndBug/add-and-commit@v9
         with:
           message: 'chore: Update coverage badge'
-          add: 'coverage.svg'
+          # The badge is now in the backend folder, so we add it from there
+          add: 'backend/coverage.svg'
